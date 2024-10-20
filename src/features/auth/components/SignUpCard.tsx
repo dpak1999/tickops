@@ -12,8 +12,35 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+
+const formschema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, { message: "Password should be minimum 8 characters long" }),
+});
 
 const SignUpCard = () => {
+  const form = useForm<z.infer<typeof formschema>>({
+    resolver: zodResolver(formschema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const onSubmit = (values: z.infer<typeof formschema>) => {
+    console.log({ values });
+  };
+
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
       <CardHeader className="flex items-center justify-center text-center p-7">
@@ -35,40 +62,66 @@ const SignUpCard = () => {
       </div>
 
       <CardContent className="p-7">
-        <form className="space-y-4">
-          <Input
-            required
-            type="text"
-            placeholder="Enter name"
-            disabled={false}
-            value={""}
-            onChange={() => {}}
-          />
+        <Form {...form}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <Input {...field} type="text" placeholder="Enter name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
 
-          <Input
-            required
-            type="email"
-            placeholder="Enter email address"
-            disabled={false}
-            value={""}
-            onChange={() => {}}
-          />
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="Enter email address"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
 
-          <Input
-            required
-            type="password"
-            placeholder="Enter password"
-            max={256}
-            min={8}
-            disabled={false}
-            value={""}
-            onChange={() => {}}
-          />
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Enter password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
 
-          <Button size={"lg"} disabled={false} className="w-full">
-            Sign Up
-          </Button>
-        </form>
+            <Button size={"lg"} disabled={false} className="w-full">
+              Sign Up
+            </Button>
+          </form>
+        </Form>
       </CardContent>
 
       <div className="px-7">
@@ -95,6 +148,19 @@ const SignUpCard = () => {
           <FaGithub className="mr-2 size-5" />
           Login with Github
         </Button>
+      </CardContent>
+
+      <div className="px-7">
+        <DottedSeparator />
+      </div>
+
+      <CardContent className="p-7 flex items-center justify-center">
+        <p>
+          Already have an account?
+          <Link href={"/sign-in"}>
+            <span className="text-blue-700">&nbsp;Sign In</span>
+          </Link>
+        </p>
       </CardContent>
     </Card>
   );
