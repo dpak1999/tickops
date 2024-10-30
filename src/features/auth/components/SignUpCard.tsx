@@ -1,3 +1,5 @@
+"use client";
+
 import DottedSeparator from "@/components/dotted";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +28,8 @@ import { registerSchema } from "../schemas";
 import { useRegister } from "../api/use-register";
 
 const SignUpCard = () => {
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: { email: "", password: "" },
@@ -112,8 +115,8 @@ const SignUpCard = () => {
               }}
             />
 
-            <Button size={"lg"} disabled={false} className="w-full">
-              Sign Up
+            <Button size={"lg"} disabled={isPending} className="w-full">
+              Register
             </Button>
           </form>
         </Form>
@@ -128,20 +131,20 @@ const SignUpCard = () => {
           variant={"secondary"}
           size={"lg"}
           className="w-full"
-          disabled={false}
+          disabled={isPending}
         >
           <FcGoogle className="mr-2 size-5" />
-          Login with Google
+          Register with Google
         </Button>
 
         <Button
           variant={"secondary"}
           size={"lg"}
           className="w-full"
-          disabled={false}
+          disabled={isPending}
         >
           <FaGithub className="mr-2 size-5" />
-          Login with Github
+          Register with Github
         </Button>
       </CardContent>
 
