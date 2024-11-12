@@ -15,11 +15,13 @@ const WorkspaceAvatar: FC<WorkspaceAvatarProps> = ({
   image,
 }) => {
   if (image) {
-    <div
-      className={cn("size-10 relative rounded-md overflow-hidden", className)}
-    >
-      <Image alt={name} src={image} fill className="object-cover" />
-    </div>;
+   return (
+     <div
+       className={cn("size-10 relative rounded-md overflow-hidden", className)}
+     >
+       <Image alt={name} src={image} fill className="object-cover" />
+     </div>
+   );
   }
   return (
     <Avatar className={cn("size-10 rounded-md", className)}>
