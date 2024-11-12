@@ -11,3 +11,15 @@ export const createWorkspaceSchema = z.object({
     ])
     .optional(),
 });
+
+export const updateWorkspaceSchema = z.object({
+  name: z.string().trim().min(1, { message: "Name is required" }).optional(),
+  image: z
+    .union([
+      z.instanceof(File),
+      z.string().transform((v) => {
+        return v === "" ? undefined : v;
+      }),
+    ])
+    .optional(),
+});
