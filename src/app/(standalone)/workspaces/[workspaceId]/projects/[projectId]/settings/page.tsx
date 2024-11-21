@@ -1,5 +1,5 @@
 import { getCurrent } from "@/features/auth/queries";
-import EditProjectForm from "@/features/projects/components/EditWorkspaceForm";
+import EditProjectForm from "@/features/projects/components/EditProjectForm";
 import { getProject } from "@/features/projects/queries";
 import { redirect } from "next/navigation";
 

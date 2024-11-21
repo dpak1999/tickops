@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useDeleteProjects } from "../api/use-delete-project";
 
 interface EditProjectFormProps {
   onCancel?: () => void;
@@ -36,8 +37,8 @@ const EditProjectForm: FC<EditProjectFormProps> = ({
   initialValues,
 }) => {
   const { mutate, isPending } = useUpdateProject();
-  // const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
-  //   useDeleteWorkspace();
+  const { mutate: deleteProject, isPending: isDeletingProject } =
+    useDeleteProjects();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -50,14 +51,14 @@ const EditProjectForm: FC<EditProjectFormProps> = ({
   const handleDelete = async () => {
     const ok = await confirmDelete();
     if (!ok) return;
-    // deleteWorkspace(
-    //   { param: { workspaceId: initialValues.$id } },
-    //   {
-    //     onSuccess: () => {
-    //       window.location.href = "/";
-    //     },
-    //   }
-    // );
+    deleteProject(
+      { param: { projectId: initialValues.$id } },
+      {
+        onSuccess: () => {
+          window.location.href = `/workspaces/${initialValues.workspaceId}`;
+        },
+      }
+    );
   };
 
   const form = useForm<z.infer<typeof updateProjectSchema>>({
@@ -71,7 +72,7 @@ const EditProjectForm: FC<EditProjectFormProps> = ({
       image: values.image instanceof File ? values.image : "",
     };
     mutate(
-      { form: finalValues, param: { projecId: initialValues.$id } },
+      { form: finalValues, param: { projectId: initialValues.$id } },
       {
         onError: () => {
           form.reset();
@@ -226,16 +227,12 @@ const EditProjectForm: FC<EditProjectFormProps> = ({
                   size={"lg"}
                   onClick={onCancel}
                   className={cn(!onCancel && "invisible")}
-                  // disabled={
-                  //   isPending || isDeletingWorkspace
-                  // }
+                  disabled={isPending || isDeletingProject}
                 >
                   Cancel
                 </Button>
                 <Button
-                  // disabled={
-                  //   isPending || isDeletingWorkspace
-                  // }
+                  disabled={isPending || isDeletingProject}
                   type="submit"
                   size={"lg"}
                 >
@@ -264,9 +261,7 @@ const EditProjectForm: FC<EditProjectFormProps> = ({
               type="button"
               size={"sm"}
               variant={"destructive"}
-              // disabled={
-              //   isPending || isDeletingWorkspace
-              // }
+              disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
               Delete project

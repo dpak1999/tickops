@@ -85,7 +85,7 @@ const app = new Hono()
     }
   )
   .patch(
-    "/:projecId",
+    "/:projectId",
     sessionMiddleware,
     zValidator("form", updateProjectSchema),
     async (c) => {
@@ -93,13 +93,13 @@ const app = new Hono()
       const storage = c.get("storage");
       const user = c.get("user");
 
-      const { projecId } = c.req.param();
+      const { projectId } = c.req.param();
       const { name, image } = c.req.valid("form");
 
       const existingProject = await databases.getDocument<Project>(
         DATABASE_ID,
         PROJECT_ID,
-        projecId
+        projectId
       );
 
       const member = await getMember({
@@ -127,7 +127,7 @@ const app = new Hono()
       const project = await databases.updateDocument(
         DATABASE_ID,
         PROJECT_ID,
-        projecId,
+        projectId,
         {
           name,
           imageUrl: uploadedImageUrl,
@@ -136,6 +136,34 @@ const app = new Hono()
 
       return c.json({ data: project });
     }
-  );
+  )
+  .delete("/:projectId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const { projectId } = c.req.param();
+
+    const existingProject = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECT_ID,
+      projectId
+    );
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: existingProject.workspaceId,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    // TODO: Delete all tasks in the project
+
+    await databases.deleteDocument(DATABASE_ID, PROJECT_ID, projectId);
+
+    return c.json({ data: { $id: projectId } });
+  });
 
 export default app;

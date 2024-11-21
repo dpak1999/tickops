@@ -133,6 +133,8 @@ const app = new Hono()
       return c.json({ error: "Unauthorized" }, 401);
     }
 
+    // TODO: Delete all data in the workspace
+
     await databases.deleteDocument(DATABASE_ID, WORKSPACE_ID, workspaceId);
 
     return c.json({ data: { $id: workspaceId } });
