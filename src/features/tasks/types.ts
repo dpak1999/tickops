@@ -5,6 +5,6 @@ export enum TaskStatus {
   DONE = "DONE",
   IN_REVIEW = "IN_REVIEW",
   ON_HOLD = "ON_HOLD",
-  TESTING = "TESTING",
+  QA = "QA",
   CANCELLED = "CANCELLED",
 }
