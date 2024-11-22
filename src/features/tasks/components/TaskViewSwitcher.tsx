@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Loader, PlusIcon } from "lucide-react";
 import DottedSeparator from "@/components/dotted";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
-import { useGetTasks } from "../api/use-get-task";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspaceId";
 import { useQueryState } from "nuqs";
 import { DataFilters } from "./DataFilters";
 import { useTaskFilter } from "../hooks/use-task-filter";
 import { DataTable } from "./data-table/DataTable";
 import { columns } from "./data-table/columns";
+import { useGetTasks } from "../api/use-get-tasks";
 
 const TaskViewSwitcher = () => {
   const [{ status, projectId, assigneeId, dueDate }] = useTaskFilter();

@@ -4,6 +4,7 @@ import CreateProjectModal from "@/features/projects/components/createProjectModa
 import CreateWorkspaceModal from "@/features/workspaces/components/createWorkspaceModal";
 import CreateTaskModal from "@/features/tasks/components/CreateTaskModal";
 import { FC, ReactNode } from "react";
+import EditTaskModal from "@/features/tasks/components/EditTaskModal";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
       <CreateWorkspaceModal />
       <CreateProjectModal />
       <CreateTaskModal />
+      <EditTaskModal />
       <div className="flex w-full h-full">
         <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto">
           <Sidebar />

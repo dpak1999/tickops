@@ -202,6 +202,89 @@ const app = new Hono()
 
       return c.json({ data: task });
     }
-  );
+  )
+  .patch(
+    "/:taskId",
+    sessionMiddleware,
+    zValidator("json", createTaskSchema.partial()),
+    async (c) => {
+      const user = c.get("user");
+      const database = c.get("databases");
+
+      const { taskId } = c.req.param();
+
+      const { name, description, dueDate, status, projectId, assigneeId } =
+        c.req.valid("json");
+
+      const existingTask = await database.getDocument<Task>(
+        DATABASE_ID,
+        TASK_ID,
+        taskId
+      );
+
+      const member = await getMember({
+        databases: database,
+        userId: user.$id,
+        workspaceId: existingTask.workspaceId,
+      });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const task = await database.updateDocument(DATABASE_ID, TASK_ID, taskId, {
+        name,
+        status,
+        projectId,
+        assigneeId,
+        dueDate,
+        description,
+      });
+
+      return c.json({ data: task });
+    }
+  )
+  .get("/:taskId", sessionMiddleware, async (c) => {
+    const database = c.get("databases");
+    const currentUser = c.get("user");
+    const { users } = await createAdminClient();
+    const { taskId } = c.req.param();
+
+    const task = await database.getDocument<Task>(DATABASE_ID, TASK_ID, taskId);
+
+    const taskMember = await getMember({
+      databases: database,
+      userId: currentUser.$id,
+      workspaceId: task.workspaceId,
+    });
+
+    if (!taskMember) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const project = await database.getDocument<Project>(
+      DATABASE_ID,
+      PROJECT_ID,
+      task.projectId
+    );
+
+    const member = await database.getDocument(
+      DATABASE_ID,
+      MEMBER_ID,
+      task.assigneeId
+    );
+
+    const user = await users.get(member.userId);
+
+    const assignee = {
+      ...member,
+      name: user.name,
+      email: user.email,
+    };
+
+    return c.json({
+      data: { ...task, project, assignee },
+    });
+  });
 
 export default app;
