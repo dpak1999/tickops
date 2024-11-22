@@ -10,3 +10,10 @@ export function generateInviteCode(length: number) {
   const uniqueId = new ShortUniqueId({ length: length || 10 });
   return uniqueId.randomUUID();
 }
+
+export function snakeCaseToTitleCase(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
