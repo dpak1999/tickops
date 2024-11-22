@@ -25,13 +25,13 @@ const badgeVariants = cva(
         [TaskStatus.DONE]:
           "border-transparent bg-emerald-400 text-primary hover:bg-emerald-400/80",
         [TaskStatus.BACKLOG]:
-          "border-transparent bg-pink-400 text-primary hover:bg-pink-400/80",
+          "border-transparent bg-pink-300 text-primary hover:bg-pink-400/80",
         [TaskStatus.ON_HOLD]:
           "border-transparent bg-gray-400 text-primary hover:bg-gray-400/80",
         [TaskStatus.QA]:
           "border-transparent bg-purple-400 text-primary hover:bg-purple-400/80",
         [TaskStatus.CANCELLED]:
-          "border-transparent bg-red-400 text-primary hover:bg-red-400/80",
+          "border-transparent bg-red-700 text-white hover:bg-red-400/80",
       },
     },
     defaultVariants: {
