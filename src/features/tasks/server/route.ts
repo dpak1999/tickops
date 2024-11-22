@@ -6,7 +6,7 @@ import { getMember } from "@/features/members/utils";
 import { DATABASE_ID, MEMBER_ID, PROJECT_ID, TASK_ID } from "@/config";
 import { ID, Query } from "node-appwrite";
 import { z } from "zod";
-import { TaskStatus } from "../types";
+import { Task, TaskStatus } from "../types";
 import { createAdminClient } from "@/lib/appwrite";
 import { Project } from "@/features/projects/types";
 
@@ -68,7 +68,11 @@ const app = new Hono()
         query.push(Query.equal("dueDate", dueDate));
       }
 
-      const tasks = await database.listDocuments(DATABASE_ID, TASK_ID, query);
+      const tasks = await database.listDocuments<Task>(
+        DATABASE_ID,
+        TASK_ID,
+        query
+      );
       const projectIds = tasks.documents.map((task) => task.projectId);
       const assigneeIds = tasks.documents.map((task) => task.assigneeId);
 
@@ -96,14 +100,23 @@ const app = new Hono()
       );
 
       const populatedTasks = tasks.documents.map((task) => {
+        const project = projects.documents.find(
+          (p) => p.$id === task.projectId
+        );
+        const assignee = assignees.find((a) => a.$id === task.assigneeId);
         return {
           ...task,
-          project: projects.documents.find((p) => p.$id === task.projectId),
-          assignee: assignees.find((a) => a.$id === task.assigneeId),
+          project,
+          assignee,
         };
       });
 
-      return c.json({ data: tasks, documents: populatedTasks });
+      return c.json({
+        data: {
+          ...tasks,
+          documents: populatedTasks,
+        },
+      });
     }
   )
   .post(
