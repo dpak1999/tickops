@@ -108,28 +108,30 @@ export const DataFilters: FC<DataFiltersProps> = ({ hideProjectFilter }) => {
         </SelectContent>
       </Select>
 
-      <Select
-        defaultValue={projectId ?? undefined}
-        onValueChange={(v) => {
-          onProjectChange(v);
-        }}
-      >
-        <SelectTrigger className="w-full h-8 lg:w-auto">
-          <div className="flex items-center pr-2">
-            <FolderIcon className="size-4 mr-2" />
-            <SelectValue placeholder="Project" />
-          </div>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All</SelectItem>
-          <SelectSeparator />
-          {projectOptions?.map((project) => (
-            <SelectItem key={project.value} value={project.value}>
-              {project.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      {!hideProjectFilter && (
+        <Select
+          defaultValue={projectId ?? undefined}
+          onValueChange={(v) => {
+            onProjectChange(v);
+          }}
+        >
+          <SelectTrigger className="w-full h-8 lg:w-auto">
+            <div className="flex items-center pr-2">
+              <FolderIcon className="size-4 mr-2" />
+              <SelectValue placeholder="Project" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectSeparator />
+            {projectOptions?.map((project) => (
+              <SelectItem key={project.value} value={project.value}>
+                {project.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
 
       <DatePicker
         placeholder="Due Date"
