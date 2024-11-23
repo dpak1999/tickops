@@ -16,6 +16,7 @@ import { KanbanData } from "./kanban/KanbanData";
 import { TaskStatus } from "../types";
 import { useCallback } from "react";
 import { useBulkUpdateTask } from "../api/use-bulk-update-task";
+import { CalendarData } from "./calendar/CalendarData";
 
 const TaskViewSwitcher = () => {
   const [{ status, projectId, assigneeId, dueDate }] = useTaskFilter();
@@ -98,7 +99,9 @@ const TaskViewSwitcher = () => {
                 onChange={onKanbanChange}
               />
             </TabsContent>
-            <TabsContent value="calendar">{JSON.stringify(tasks)}</TabsContent>
+            <TabsContent value="calendar" className="pb-4 h-full">
+              <CalendarData data={tasks?.documents ?? []} />
+            </TabsContent>
           </>
         )}
       </div>
