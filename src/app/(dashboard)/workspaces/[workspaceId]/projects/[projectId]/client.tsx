@@ -1,9 +1,11 @@
 "use client";
 
+import { Analytics } from "@/components/Analytics";
 import PageError from "@/components/PageError";
 import PageLoader from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import { useGetProject } from "@/features/projects/api/use-get-project";
+import { useGetProjectAnalytics } from "@/features/projects/api/use-get-project-analytics";
 import ProjectAvatar from "@/features/projects/components/projectAvatar";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import TaskViewSwitcher from "@/features/tasks/components/TaskViewSwitcher";
@@ -13,8 +15,10 @@ import Link from "next/link";
 export const ProjectIdClient = () => {
   const projectId = useProjectId();
   const { data: project, isLoading } = useGetProject({ projectId });
+  const { data: analytics, isLoading: isAnalyticsLoading } =
+    useGetProjectAnalytics({ projectId });
 
-  if (isLoading) {
+  if (isLoading || isAnalyticsLoading) {
     return <PageLoader />;
   }
 
@@ -45,7 +49,7 @@ export const ProjectIdClient = () => {
           </Button>
         </div>
       </div>
-
+      {analytics ? <Analytics data={analytics} /> : null}
       <TaskViewSwitcher hideProjectFilter />
     </div>
   );
