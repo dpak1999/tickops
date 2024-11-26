@@ -40,7 +40,7 @@ export const DataFilters: FC<DataFiltersProps> = ({ hideProjectFilter }) => {
     value: member.$id,
   }));
 
-  const [{ status, projectId, assigneeId, search, dueDate }, setFilters] =
+  const [{ status, projectId, assigneeId, dueDate }, setFilters] =
     useTaskFilter();
 
   const onStatusChange = (value: string) => {

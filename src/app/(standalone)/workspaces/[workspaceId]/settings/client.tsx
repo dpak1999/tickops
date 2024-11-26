@@ -3,7 +3,6 @@
 import PageError from "@/components/PageError";
 import PageLoader from "@/components/PageLoader";
 import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
-import { useGetWorkspaceInfo } from "@/features/workspaces/api/use-get-workspace-info";
 import EditWorkspaceForm from "@/features/workspaces/components/EditWorkspaceForm";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspaceId";
 

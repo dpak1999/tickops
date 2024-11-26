@@ -330,6 +330,10 @@ const app = new Hono()
 
       const workspaceId = workspaceIds.values().next().value;
 
+      if (!workspaceId) {
+        return c.json({ error: "Workspace not found" }, 400);
+      }
+
       const member = await getMember({
         databases,
         userId: user.$id,
